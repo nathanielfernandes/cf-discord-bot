@@ -2,7 +2,7 @@
 
 ### A Library for creating 'serverless' discord bots using cloudflare workers
 
-The library is meant to simplify the process of setting up a cloudflare worker discord bot that interactions with discord through slash commands.
+The libraries purpose is to simplify the process of creating cloudflare worker discord bots that interact with discord through slash commands.
 
 ## Progress
 
