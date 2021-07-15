@@ -1,0 +1,16 @@
+/target
+/dist
+**/*.rs.bk
+Cargo.lock
+bin/
+pkg/
+wasm-pack.log
+worker/
+node_modules/
+.cargo-ok
+wrangler.toml
+.prettierrc
+CODE_OF_CONDUCT.md
+package-lock.json
+package.json
+webpack.config.js
