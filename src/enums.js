@@ -1,12 +1,12 @@
-export const ApplicationCommandOptionType  = {
+export const ApplicationCommandOptionType = {
     SUB_COMMAND: 1,
-    SUB_COMMAND_GROUP:2,
+    SUB_COMMAND_GROUP: 2,
     STRING: 3,
     INTEGER: 4,
     BOOLEAN: 5,
     USER: 6,
     CHANNEL: 7,
-    ROLE:8,
+    ROLE: 8,
     MENTIONABLE: 9
 }
 
@@ -16,7 +16,7 @@ export const ApplicationCommandPermissionType = {
 }
 
 export const InteractionRequestType = {
-    PING: 1,                                  
+    PING: 1,
     APPLICATION_COMMAND: 2,
     MESSAGE_COMPONENT: 3
 }

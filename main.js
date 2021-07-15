@@ -8,7 +8,7 @@ addEventListener("fetch", (event) => {
         console.log(err.stack);
         console.log(err.message);
         return new Response(err.stack, { status: 500 })
-      } 
+      }
     )
   );
 });
@@ -17,8 +17,8 @@ async function handleRequest(req) {
   const { pathname } = new URL(req.url);
 
   if (pathname.startsWith("/interactions")) {
-      
-    const PUBLIC_KEY = await ENV.get("PUBLIC_KEY", {type: "text"});
+
+    const PUBLIC_KEY = await ENV.get("PUBLIC_KEY", { type: "text" });
     var bot = new Bot(PUBLIC_KEY, command_mapping)
 
     return await bot.on_interaction(req)
