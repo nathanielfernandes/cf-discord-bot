@@ -1,30 +1,21 @@
 import { Embed, Member } from './src/types';
 import { randint, randchoice } from './src/utils';
-import { InteractionCallbackType } from './src/enums';
 
 
 async function robert(interaction) {
   const quotes = await STUFF.get("quotes", { type: "json" });
   const quote = randchoice(quotes);
   var embed = new Embed({ description: quote, color: "random" });
-  return {
-    type: InteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-    data: {
-      embeds: [embed.json()]
-    }
-  }
+
+  return interaction.reply({ embeds: [embed] });
 };
 
 async function egg(interaction) {
   const quotes = await STUFF.get("egg", { type: "json" });
   const quote = randchoice(quotes);
   var embed = new Embed({ description: quote, color: "random" });
-  return {
-    type: InteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-    data: {
-      embeds: [embed.json()]
-    }
-  }
+
+  return interaction.reply({ embeds: [embed] });
 };
 
 
@@ -32,13 +23,9 @@ async function vibe(interaction) {
   const words = await STUFF.get("words", { type: "json" });
   const emojis = await STUFF.get("emojis", { type: "json" });
 
-  var embed = new Embed({ description: `${interaction.member.mention} your vibe checked out to be **${randchoice(words)}** ${randchoice(emojis)}`, color: "random" });
-  return {
-    type: InteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-    data: {
-      embeds: [embed.json()]
-    }
-  }
+  const embed = new Embed({ description: `${interaction.member.mention} your vibe checked out to be **${randchoice(words)}** ${randchoice(emojis)}`, color: "random" });
+
+  return interaction.reply({ embeds: [embed] });
 };
 
 
@@ -47,25 +34,15 @@ async function l(interaction) {
   await STUFF.put("l", curL);
 
   const embed = new Embed({ description: `L Counter: **${curL}**`, color: "random" })
-  return {
-    type: InteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-    data: {
-      embeds: [embed.json()]
-    }
-  }
 
+  return interaction.reply({ embeds: [embed] });
 };
 
 async function pp(interaction) {
   var embed = new Embed({ description: `**8${"=".repeat(randint(50))}D**`, color: "random" });
   embed.set_author({ name: `${interaction.member.username}'s pp size`, icon_url: interaction.member.avatar_url })
 
-  return {
-    type: InteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-    data: {
-      embeds: [embed.json()]
-    }
-  };
+  return interaction.reply({ embeds: [embed] });
 };
 
 async function cat(interaction) {
@@ -73,12 +50,8 @@ async function cat(interaction) {
   const cat = await resp.json();
   var embed = new Embed({ color: "random", image: cat.file });
   embed.set_footer({ text: "random cat :3" });
-  return {
-    type: InteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-    data: {
-      embeds: [embed.json()]
-    }
-  }
+
+  return interaction.reply({ embeds: [embed] });
 };
 
 
@@ -87,30 +60,22 @@ async function fortune(interaction) {
   const fortune = await resp.json();
   var embed = new Embed({ description: `**${fortune}**`, color: "random" });
   embed.set_footer({ text: "random fortune 🔮" });
-  return {
-    type: InteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-    data: {
-      embeds: [embed.json()]
-    }
-  }
+
+  return interaction.reply({ embeds: [embed] });
 }
 
 
 async function pfp(interaction) {
   var member;
   if (interaction.data.options !== undefined) {
-    var member = new Member({ user: interaction.data.resolved.users[interaction.data.options[0].value] });
+    member = new Member({ user: interaction.data.resolved.users[interaction.data.options[0].value] });
   } else {
     member = interaction.member;
   }
   var embed = new Embed({ image: `${member.avatar_url}?size=1024`, color: "random" });
   embed.set_author({ name: `${member.fullname}'s pfp`, url: member.avatar_url });
-  return {
-    type: InteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-    data: {
-      embeds: [embed.json()]
-    }
-  }
+
+  return interaction.reply({ embeds: [embed] });
 }
 
 
@@ -141,13 +106,8 @@ async function get(interaction) {
 
   var embed = new Embed({ description: "```yaml\n" + soup + "```", color: "random", title: URL });
   embed.set_author({ name: `GET request` });
-  return {
-    type: InteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-    data: {
-      embeds: [embed.json()]
-    }
-  }
 
+  return interaction.reply({ embeds: embed });
 }
 
 
@@ -162,16 +122,5 @@ export const command_mapping = {
   "get": get,
   "egg": egg
 }
-
-// commands.add("pp", pp);
-// commands.add("robert", robert);
-// commands.add("vibe", vibe);
-// commands.add("l", l);
-// commands.add("cat", cat);
-// commands.add("fortune", fortune);
-// commands.add("pfp", pfp);
-// commands.add("get", get);
-// commands.add("egg", egg);
-
 
 

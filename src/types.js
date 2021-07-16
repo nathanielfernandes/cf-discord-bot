@@ -32,7 +32,20 @@ export class Interaction {
     this.data = interaction.data;
     this.command_name = this.data.name;
     this.command_id = this.data.id;
-  }
+  };
+
+  reply({ content, embeds } = {}) {
+    return {
+      type: InteractionCallbackType.ChannelMessageWithSource,
+      data: {
+        "content": content,
+        "embeds": embeds,
+        allowed_mentions: {
+          parse: ["users", "roles"]
+        }
+      }
+    }
+  };
 };
 
 export class Embed {
@@ -66,7 +79,7 @@ export class Embed {
     this.fields.push({ "name": name, "value": value, "inline": inline });
   };
 
-  json() {
+  toJSON() {
     var tempData = {}
     if (this.title !== undefined) {
       tempData["title"] = this.title;
@@ -115,7 +128,7 @@ export class Commands {
     if (interaction.command_name in this.mapping) {
       reply = await this.mapping[interaction.command_name](interaction);
     } else {
-      reply = { type: InteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE, data: { content: "*Something Went Wrong, Command Does not exist!*" } };
+      reply = { type: InteractionCallbackType.ChannelMessageWithSource, data: { content: "This command has not been implemented yet!" } };
     };
     return new Response(JSON.stringify(reply), { status: 200, headers: { "Content-Type": "application/json" } });
   };

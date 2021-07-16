@@ -6,7 +6,7 @@ const nacl = require('tweetnacl');
 export class Bot {
   constructor(public_key, commands = undefined) {
     this.commands = new Commands(commands);
-    this.public_key = public_key
+    this.public_key = public_key;
   }
 
   async validate(req) {
@@ -23,27 +23,28 @@ export class Bot {
 
 
   async on_interaction(req) {
-    const valid = await this.validate(req.clone());
-
-    if (!valid) {
-      return errorsResponse(401);
-    }
     try {
+      const valid = await this.validate(req.clone());
+
+      if (!valid) {
+        return errorsResponse(401);
+      }
+
       const interaction = await req.json();
 
       switch (interaction.type) {
-        case InteractionRequestType.APPLICATION_COMMAND:
+        case InteractionRequestType.ApplicationCommand:
           return await this.commands.route(new Interaction(interaction));
 
-        case InteractionRequestType.PING:
-          return jsonResponse({ type: InteractionCallbackType.PONG });
+        case InteractionRequestType.Ping:
+          return jsonResponse({ type: InteractionCallbackType.Pong });
 
         default:
           return errorResponse(400)
       }
     } catch (e) {
       console.error(e.stack)
-      return errorResponse(400)
+      return errorResponse(500)
     }
   }
 }
