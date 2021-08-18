@@ -1,11 +1,12 @@
-import { Interaction, Commands } from './types';
+import { Interaction, Commands, Components } from './types';
 import { jsonResponse, errorResponse } from './utils';
 import { InteractionRequestType, InteractionCallbackType } from "./enums";
 const nacl = require('tweetnacl');
 
 export class Bot {
-  constructor(public_key, commands = undefined) {
+  constructor(public_key, commands = undefined, components = undefined) {
     this.commands = new Commands(commands);
+    this.components = new Components(components);
     this.public_key = public_key;
   }
 
@@ -27,14 +28,18 @@ export class Bot {
       const valid = await this.validate(req.clone());
 
       if (!valid) {
-        return errorsResponse(401);
+        return errorResponse(401);
       }
 
       const interaction = await req.json();
 
+      // console.log(JSON.stringify(interaction));
       switch (interaction.type) {
         case InteractionRequestType.ApplicationCommand:
           return await this.commands.route(new Interaction(interaction));
+        
+        case InteractionRequestType.MessageComponent:
+          return await this.components.route(new Interaction(interaction));
 
         case InteractionRequestType.Ping:
           return jsonResponse({ type: InteractionCallbackType.Pong });

@@ -1,5 +1,5 @@
 import { Bot } from "./src/bot"
-import { command_mapping } from "./commands"
+import { command_mapping , component_mapping} from "./commands"
 
 
 // exmaple command
@@ -16,7 +16,7 @@ command_mapping["example"] = example;
 
 // Your bots public key
 const PUBLIC_KEY = "6f1a7afc9e4b4d00a4d79587f01a125c3f03de3a624c70c7cc9ad26d4746def7";
-const bot = new Bot(PUBLIC_KEY, command_mapping)
+const bot = new Bot(PUBLIC_KEY, command_mapping, component_mapping);
 
 // just add bot.on_interaction into the events
 addEventListener("fetch", (event) => {

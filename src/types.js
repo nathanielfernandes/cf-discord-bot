@@ -1,4 +1,4 @@
-import { InteractionCallbackType } from "./enums";
+import { InteractionCallbackType, MessageComponent, ButtonStyle, InteractionCallbackDataFlag, InteractionRequestType } from "./enums";
 
 export class Member {
   constructor(member) {
@@ -32,14 +32,39 @@ export class Interaction {
     this.data = interaction.data;
     this.command_name = this.data.name;
     this.command_id = this.data.id;
+
+    if (this.type === InteractionRequestType.MessageComponent) {
+      this.action_rows = interaction.message.components;
+    }
+   
+    this.component_id = this.data.custom_id;
+    this.component_type = this.data.component_type;
   };
 
-  reply({ content, embeds } = {}) {
+  edit({ content, embeds, components, ephemeral } = {}) {
+    return {
+      type: InteractionCallbackType.UpdateMessage,
+      data: {
+        "content": content,
+        "embeds": embeds,
+        "components": components,
+        flags: (ephemeral) ? InteractionCallbackDataFlag.Ephemeral : 0,
+        allowed_mentions: {
+          parse: ["users", "roles"]
+        }
+      }
+    }
+  };
+
+
+  reply({ content, embeds, components, ephemeral } = {}) {
     return {
       type: InteractionCallbackType.ChannelMessageWithSource,
       data: {
         "content": content,
         "embeds": embeds,
+        "components": components,
+        flags: (ephemeral) ? InteractionCallbackDataFlag.Ephemeral : 0,
         allowed_mentions: {
           parse: ["users", "roles"]
         }
@@ -47,6 +72,40 @@ export class Interaction {
     }
   };
 };
+
+
+export class ActionRow {
+  constructor({components} = {}) {
+    this.components = components;
+  }
+    
+  toJSON() {    
+    return {
+      type: MessageComponent.ActionRow,
+      "components": this.components
+    }
+  }
+}
+
+export class Button {
+  constructor({label, custom_id, style} = {}) {
+    this.label = label;
+    this.custom_id = custom_id;
+    this.style = style;
+  }
+  toJSON() {    
+    return {
+      type: MessageComponent.Button,
+      label: this.label,
+      style: (this.style !== undefined) ? this.style : ButtonStyle.Primary,
+      custom_id: (this.custom_id !== undefined) ? this.custom_id : "NO_ID"
+    }
+  }
+}
+
+
+
+
 
 export class Embed {
   constructor({ title, description, url, color, timestamp, thumbnail, image } = {}) {
@@ -118,6 +177,29 @@ export class Embed {
 };
 
 
+export class Components {
+  constructor(mapping = {}) {
+    this.mapping = mapping;
+  };
+
+  async route(interaction) {
+    var reply;
+    if (interaction.component_id in this.mapping) {
+      reply = await this.mapping[interaction.component_id](interaction);
+    } else {
+      reply = { type: InteractionCallbackType.ChannelMessageWithSource, data: { content: "This component has not been implemented yet!", flags: InteractionCallbackDataFlag.Emepheral}};
+    };
+    return new Response(JSON.stringify(reply), { status: 200, headers: { "Content-Type": "application/json" }});
+  };
+
+  add(command_name, command) {
+    this.mapping[command_name] = command;
+  };
+
+}
+
+
+
 export class Commands {
   constructor(mapping = {}) {
     this.mapping = mapping;
@@ -128,7 +210,7 @@ export class Commands {
     if (interaction.command_name in this.mapping) {
       reply = await this.mapping[interaction.command_name](interaction);
     } else {
-      reply = { type: InteractionCallbackType.ChannelMessageWithSource, data: { content: "This command has not been implemented yet!" } };
+      reply = { type: InteractionCallbackType.ChannelMessageWithSource, data: { content: "This command has not been implemented yet!", flags: InteractionCallbackDataFlag.Emepheral} };
     };
     return new Response(JSON.stringify(reply), { status: 200, headers: { "Content-Type": "application/json" } });
   };

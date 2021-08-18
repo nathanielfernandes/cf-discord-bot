@@ -28,3 +28,28 @@ export const InteractionCallbackType = {
     DeferredUpdateMessage: 6,                   // for components, ACK an interaction and edit the original message later; the user does not see a loading state
     UpdateMessage: 7                            // 	for components, edit the message the component was attached to
 }
+
+export const InteractionCallbackDataFlag = {
+    Ephemeral: 1<<6
+}
+
+
+export const MessageComponent = {
+    ActionRow: 1,
+    Button: 2, 
+    SelectMenu: 3
+}
+
+export const ButtonStyle = {
+    Primary: 1,
+    Secondary: 2,
+    Success: 3,
+    Danger: 4,
+    Link: 5,
+
+    Blurple: 1, 
+    Grey:2,
+    Green:3,
+    Red: 4,
+}
+
